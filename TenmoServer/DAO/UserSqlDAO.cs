@@ -104,22 +104,17 @@ namespace TenmoServer.DAO
         public decimal GetBalance(int userId)
         {
             decimal balance = 0;
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT balance FROM accounts WHERE user_id = @userId");
+                SqlCommand cmd = new SqlCommand("SELECT balance FROM accounts WHERE user_id = @userId", conn);
                 cmd.Parameters.AddWithValue("@userId", userId);
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.HasRows)
-                {
-
-                    balance = Convert.ToDecimal(reader["balance"]);
-
-                }
+                reader.Read();
+                balance = Convert.ToDecimal(reader["balance"]);
             }
             return balance;
         }

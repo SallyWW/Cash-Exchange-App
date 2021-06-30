@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenmoServer.DAO;
+using TenmoServer.Models;
 
 namespace TenmoServer.Controllers
 {
@@ -20,10 +21,12 @@ namespace TenmoServer.Controllers
         }
 
         [HttpGet("balance")]
-        public ActionResult<decimal> Balance()
+        public ActionResult<UserBalance> Balance()
         {
+            UserBalance balance = new UserBalance();
             int userId = int.Parse(this.User.FindFirst("sub").Value);
-            decimal balance = userDAO.GetBalance(userId);
+
+            balance.Balance = userDAO.GetBalance(userId);
 
             return Ok(balance);
         }
