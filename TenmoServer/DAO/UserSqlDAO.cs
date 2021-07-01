@@ -12,6 +12,8 @@ namespace TenmoServer.DAO
         private readonly string connectionString;
         const decimal startingBalance = 1000;
 
+        public object CreateTranser => throw new NotImplementedException();
+
         public UserSqlDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
@@ -119,14 +121,58 @@ namespace TenmoServer.DAO
             return balance;
         }
 
-        public decimal ChangeReceiverBalance ()
+        public void CreateTransfer(int type, int status, int fromUserId, int toUserId, decimal amount)
         {
-            return 0;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                //Use userId to get accountId
+                int fromAccountId = GetAccountId(fromUserId);
+                int toAccountId = GetAccountId(toUserId);
+
+                SqlCommand cmd = new SqlCommand("INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                    "VALUES(@typeId, @statusId, @fromId, @sendId, @transferAmount)", conn);
+                cmd.Parameters.AddWithValue("@typeId", type);
+                cmd.Parameters.AddWithValue("@statusId", status);
+                cmd.Parameters.AddWithValue("@fromId", fromAccountId);
+                cmd.Parameters.AddWithValue("@sendId", toAccountId);
+                cmd.Parameters.AddWithValue("@transferAmount", amount);
+
+                cmd.ExecuteNonQuery();
+            }
         }
 
-        public decimal ChangeSenderBalance()
+        private int GetAccountId(int userId)
         {
-            return 0;
+            int accountId;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT account_id FROM accounts WHERE user_id = @userId", conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                reader.Read();
+                accountId = Convert.ToInt32(reader["account_id"]);
+            }
+            return accountId;
+        }
+
+        public void UpdateBalance(int userId, decimal delta)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("UPDATE accounts SET balance = balance + @amount WHERE user_id = @userId", conn);
+                cmd.Parameters.AddWithValue("@amount", delta);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

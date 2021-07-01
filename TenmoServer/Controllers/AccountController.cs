@@ -44,5 +44,22 @@ namespace TenmoServer.Controllers
 
             return Ok(users);
         }
+
+        [HttpPost("transfer")]
+        public ActionResult SendTransfer(SendTransfer transfer)
+        {
+            int typeSendId = 1001;
+            int statusApprovedId = 2001;
+
+            decimal usersBalance = userDAO.GetBalance(transfer.SendId);
+
+            userDAO.CreateTransfer(typeSendId, statusApprovedId, transfer.SendId, transfer.RecieveId, transfer.Amount);
+
+            userDAO.UpdateBalance(transfer.RecieveId, transfer.Amount);
+
+            userDAO.UpdateBalance(transfer.SendId, (transfer.Amount * -1));
+
+            return Ok();
+        }
     }
 }

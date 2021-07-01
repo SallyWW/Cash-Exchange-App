@@ -107,6 +107,8 @@ namespace TenmoClient
                             Console.WriteLine("Enter amount: ");
                             decimal amountToTransfer = Convert.ToDecimal(Console.ReadLine());
 
+                            bool success = accountService.SendTransfer(UserService.Token, UserService.UserId,  transferToUserId, amountToTransfer);
+
                             break;
                         case 5: // Request TE Bucks
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me

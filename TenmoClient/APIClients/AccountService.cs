@@ -59,5 +59,30 @@ namespace TenmoClient.APIClients
                 return response.Data;
             }
         }
+
+        public bool SendTransfer(string token, int fromUserId, int toUserId, decimal transferAmount)
+        {
+            client.Authenticator = new JwtAuthenticator(token);
+
+            RestRequest request = new RestRequest(API_BASE_URL + "transfer");
+            request.AddJsonBody(new API_Transfer { ReceiveId = toUserId , SendId = fromUserId , Amount = transferAmount });
+
+            IRestResponse response = client.Post(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("An error occurred communicating with the server.");
+                return false;
+            }
+            else if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Response was unsuccessful. ");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
