@@ -21,7 +21,7 @@ namespace TenmoServer.Controllers
         }
 
         [HttpGet("balance")]
-        public ActionResult<UserBalance> Balance()
+        public ActionResult<UserBalance> ViewBalance()
         {
             UserBalance balance = new UserBalance();
             int userId = int.Parse(this.User.FindFirst("sub").Value);

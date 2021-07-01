@@ -9,7 +9,7 @@ namespace TenmoClient.APIClients
 {
     public class AccountService
     {
-        private const string API_BASE_URL = "https://localhost:44315/";
+        private const string API_BASE_URL = "https://localhost:44315/Account/";
         private readonly IRestClient client = new RestClient();
 
         public decimal GetBalance(int userId, string token)
