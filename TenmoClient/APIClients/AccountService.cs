@@ -35,5 +35,29 @@ namespace TenmoClient.APIClients
                 return response.Data.Balance;
             }
         }
+
+        public List<API_User> GetUsers(string token)
+        {
+            client.Authenticator = new JwtAuthenticator(token);
+
+            RestRequest request = new RestRequest(API_BASE_URL + "users");
+
+            IRestResponse <List<API_User>> response = client.Get<List<API_User>>(request);
+
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                Console.WriteLine("An error occurred communicating with the server.");
+                return null;
+            }
+            else if (!response.IsSuccessful)
+            {
+                Console.WriteLine("Response was unsuccessful. ");
+                return null;
+            }
+            else
+            {
+                return response.Data;
+            }
+        }
     }
 }

@@ -118,5 +118,15 @@ namespace TenmoServer.DAO
             }
             return balance;
         }
+
+        public decimal ChangeReceiverBalance ()
+        {
+            return 0;
+        }
+
+        public decimal ChangeSenderBalance()
+        {
+            return 0;
+        }
     }
 }

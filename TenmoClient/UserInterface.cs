@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TenmoClient.APIClients;
 using TenmoClient.Data;
 
@@ -87,7 +88,25 @@ namespace TenmoClient
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
                             break;
                         case 4: // Send TE Bucks
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            List<API_User> users = accountService.GetUsers(UserService.Token);
+
+                            Console.WriteLine("-------------------------------------------");
+                            Console.WriteLine("Users");
+                            Console.WriteLine("ID          Name                           ");
+                            Console.WriteLine("-------------------------------------------");
+
+                            foreach (API_User user in users)
+                            {
+                                Console.WriteLine($"{user.UserId}".PadRight(12) + $"{user.Username}".PadRight(31));
+                            }
+
+                            Console.WriteLine("---------");
+                            Console.WriteLine();
+                            Console.WriteLine("Enter ID of user you are sending to (0 to cancel): ");
+                            int transferToUserId = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter amount: ");
+                            decimal amountToTransfer = Convert.ToDecimal(Console.ReadLine());
+
                             break;
                         case 5: // Request TE Bucks
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me

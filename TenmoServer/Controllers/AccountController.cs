@@ -30,6 +30,19 @@ namespace TenmoServer.Controllers
 
             return Ok(balance);
         }
-        
+
+        [HttpGet("users")]
+        public ActionResult<List<UserResponse>> GetUsers()
+        {
+            List<User> dBUsers = userDAO.GetUsers();
+            List<UserResponse> users = new List<UserResponse>();
+
+            foreach (User dBUser in dBUsers)
+            {
+                users.Add(new UserResponse { UserId = dBUser.UserId, Username = dBUser.Username });
+            }
+
+            return Ok(users);
+        }
     }
 }
