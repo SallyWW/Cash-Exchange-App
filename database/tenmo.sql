@@ -64,3 +64,6 @@ INSERT INTO transfer_statuses (transfer_status_desc) VALUES ('Rejected');
 
 INSERT INTO transfer_types (transfer_type_desc) VALUES ('Request');
 INSERT INTO transfer_types (transfer_type_desc) VALUES ('Send');
+
+SELECT balance FROM accounts WHERE user_id = 3000
+SELECT * FROM accounts

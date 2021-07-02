@@ -12,5 +12,7 @@ namespace TenmoClient.Data
         public string ToUserName { get; set; }
         public int ToUserId { get; set; }
         public decimal TransferAmount { get; set; }
+        public string TypeSendId { get; set; } = "Send";
+        public string StatusApprovedId { get; set; } = "Approved";
     }
 }

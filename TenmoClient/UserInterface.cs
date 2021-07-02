@@ -108,25 +108,29 @@ namespace TenmoClient
                                 Console.WriteLine("---------");
                                 Console.WriteLine("Please enter transfer ID to view details(0 to cancel): ");
                                 int transferDetailsId = Convert.ToInt32(Console.ReadLine());
-                                //--------------------------------------------
-                                //Transfer Details
-                                //--------------------------------------------
-                                // Id: 23
-                                // From: Bernice
-                                // To: Me Myselfandi
-                                // Type: Send
-                                // Status: Approved
-                                // Amount: $903.14
-
-                                Console.WriteLine("--------------------------------------------");
-                                Console.WriteLine("Transfer Details");
-                                Console.WriteLine("--------------------------------------------");
-
+                                
+                            
+                                if (transferDetailsId == transfer.TransferId)
+                                {
+                                    Console.WriteLine("--------------------------------------------");
+                                    Console.WriteLine("Transfer Details");
+                                    Console.WriteLine("--------------------------------------------");
+                                    Console.WriteLine($"ID: {transfer.TransferId}");
+                                    Console.WriteLine($"From: {transfer.FromUsername}");
+                                    Console.WriteLine($"To: {transfer.ToUserName}");
+                                    Console.WriteLine($"Type: {transfer.TypeSendId}");
+                                    Console.WriteLine($"Status: {transfer.StatusApprovedId}");
+                                    Console.WriteLine($"Amount: {transfer.TransferAmount}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid transfer id.");
+                                }
 
                             }
 
 
-                            break;                    
+                            break;
                         case 3: // View Pending Requests
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
                             break;
