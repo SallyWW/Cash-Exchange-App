@@ -81,76 +81,13 @@ namespace TenmoClient
                             ViewBalance();
                             break;
                         case 2: // View Past Transfers
-                            List<API_TransferDetails> transfers = accountService.GetTransfers(UserService.Token);
-
-                            Console.WriteLine("-------------------------------------------");
-                            Console.WriteLine("Transfers");
-                            Console.WriteLine("ID          From/To                 Amount");
-                            Console.WriteLine("-------------------------------------------");
-
-                            foreach (API_TransferDetails transfer in transfers)
-                            {
-                                string columnOne = transfer.TransferId.ToString().PadRight(12);
-                                string columnTwo;
-
-                                if (UserService.UserId == transfer.ToUserId)
-                                {
-                                    columnTwo = $"From: {transfer.FromUsername}".PadRight(23);
-                                }
-                                else
-                                {
-                                    columnTwo = $"To: {transfer.ToUserName}".PadRight(23);
-                                }
-
-                                string columnThree = transfer.TransferAmount.ToString("C").PadLeft(7);
-                                Console.WriteLine(columnOne + columnTwo + columnThree);
-                            }
-                                Console.WriteLine("---------");
-                                Console.WriteLine("Please enter transfer ID to view details(0 to cancel): ");
-                                int transferDetailsId = Convert.ToInt32(Console.ReadLine());
-                                
-                            foreach(API_TransferDetails transferdetail in transfers)
-                            {
-                                if (transferDetailsId == transferdetail.TransferId)
-                                {
-                                    Console.WriteLine("--------------------------------------------");
-                                    Console.WriteLine("Transfer Details");
-                                    Console.WriteLine("--------------------------------------------");
-                                    Console.WriteLine($"ID: {transferdetail.TransferId}");
-                                    Console.WriteLine($"From: {transferdetail.FromUsername}");
-                                    Console.WriteLine($"To: {transferdetail.ToUserName}");
-                                    Console.WriteLine($"Type: {transferdetail.Type}");
-                                    Console.WriteLine($"Status: {transferdetail.Status}");
-                                    Console.WriteLine($"Amount: {transferdetail.TransferAmount}");
-                                }
-                            }
-
+                            ViewPastTransfers();
                             break;
                         case 3: // View Pending Requests
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
                             break;
                         case 4: // Send TE Bucks
-                            List<API_User> users = accountService.GetUsers(UserService.Token);
-
-                            Console.WriteLine("-------------------------------------------");
-                            Console.WriteLine("Users");
-                            Console.WriteLine("ID          Name                           ");
-                            Console.WriteLine("-------------------------------------------");
-
-                            foreach (API_User user in users)
-                            {
-                                Console.WriteLine($"{user.UserId}".PadRight(12) + $"{user.Username}".PadRight(31));
-                            }
-
-                            Console.WriteLine("---------");
-                            Console.WriteLine();
-                            Console.WriteLine("Enter ID of user you are sending to (0 to cancel): ");
-                            int transferToUserId = Convert.ToInt32(Console.ReadLine());
-                            Console.WriteLine("Enter amount: ");
-                            decimal amountToTransfer = Convert.ToDecimal(Console.ReadLine());
-
-                            bool success = accountService.SendTransfer(UserService.Token, UserService.UserId, transferToUserId, amountToTransfer);
-
+                            SendTEBucks();
                             break;
                         case 5: // Request TE Bucks
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -202,6 +139,77 @@ namespace TenmoClient
         {
             decimal balance = accountService.GetBalance(UserService.UserId, UserService.Token);
             Console.WriteLine($"Your current account balance is: {balance.ToString("C")}");
+        }
+
+        private void SendTEBucks()
+        {
+            List<API_User> users = accountService.GetUsers(UserService.Token);
+
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Users");
+            Console.WriteLine("ID          Name                           ");
+            Console.WriteLine("-------------------------------------------");
+
+            foreach (API_User user in users)
+            {
+                Console.WriteLine($"{user.UserId}".PadRight(12) + $"{user.Username}".PadRight(31));
+            }
+
+            Console.WriteLine("---------");
+            Console.WriteLine();
+            Console.WriteLine("Enter ID of user you are sending to (0 to cancel): ");
+            int transferToUserId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Enter amount: ");
+            decimal amountToTransfer = Convert.ToDecimal(Console.ReadLine());
+
+            bool success = accountService.SendTransfer(UserService.Token, UserService.UserId, transferToUserId, amountToTransfer);
+        }
+
+        private void ViewPastTransfers()
+        {
+            List<API_TransferDetails> transfers = accountService.GetTransfers(UserService.Token);
+
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Transfers");
+            Console.WriteLine("ID          From/To                 Amount");
+            Console.WriteLine("-------------------------------------------");
+
+            foreach (API_TransferDetails transfer in transfers)
+            {
+                string columnOne = transfer.TransferId.ToString().PadRight(12);
+                string columnTwo;
+
+                if (UserService.UserId == transfer.ToUserId)
+                {
+                    columnTwo = $"From: {transfer.FromUsername}".PadRight(23);
+                }
+                else
+                {
+                    columnTwo = $"To: {transfer.ToUserName}".PadRight(23);
+                }
+
+                string columnThree = transfer.TransferAmount.ToString("C").PadLeft(7);
+                Console.WriteLine(columnOne + columnTwo + columnThree);
+            }
+            Console.WriteLine("---------");
+            Console.WriteLine("Please enter transfer ID to view details(0 to cancel): ");
+            int transferDetailsId = Convert.ToInt32(Console.ReadLine());
+
+            foreach (API_TransferDetails transferdetail in transfers)
+            {
+                if (transferDetailsId == transferdetail.TransferId)
+                {
+                    Console.WriteLine("--------------------------------------------");
+                    Console.WriteLine("Transfer Details");
+                    Console.WriteLine("--------------------------------------------");
+                    Console.WriteLine($"ID: {transferdetail.TransferId}");
+                    Console.WriteLine($"From: {transferdetail.FromUsername}");
+                    Console.WriteLine($"To: {transferdetail.ToUserName}");
+                    Console.WriteLine($"Type: {transferdetail.Type}");
+                    Console.WriteLine($"Status: {transferdetail.Status}");
+                    Console.WriteLine($"Amount: {transferdetail.TransferAmount}");
+                }
+            }
         }
     }
 }
