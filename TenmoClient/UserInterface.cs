@@ -78,8 +78,7 @@ namespace TenmoClient
                     switch (menuSelection)
                     {
                         case 1: // View Balance
-                            decimal balance = accountService.GetBalance(UserService.UserId, UserService.Token);
-                            Console.WriteLine($"Your current account balance is: {balance.ToString("C")}");
+                            ViewBalance();
                             break;
                         case 2: // View Past Transfers
                             List<API_TransferDetails> transfers = accountService.GetTransfers(UserService.Token);
@@ -105,30 +104,26 @@ namespace TenmoClient
 
                                 string columnThree = transfer.TransferAmount.ToString("C").PadLeft(7);
                                 Console.WriteLine(columnOne + columnTwo + columnThree);
+                            }
                                 Console.WriteLine("---------");
                                 Console.WriteLine("Please enter transfer ID to view details(0 to cancel): ");
                                 int transferDetailsId = Convert.ToInt32(Console.ReadLine());
                                 
-                            
-                                if (transferDetailsId == transfer.TransferId)
+                            foreach(API_TransferDetails transferdetail in transfers)
+                            {
+                                if (transferDetailsId == transferdetail.TransferId)
                                 {
                                     Console.WriteLine("--------------------------------------------");
                                     Console.WriteLine("Transfer Details");
                                     Console.WriteLine("--------------------------------------------");
-                                    Console.WriteLine($"ID: {transfer.TransferId}");
-                                    Console.WriteLine($"From: {transfer.FromUsername}");
-                                    Console.WriteLine($"To: {transfer.ToUserName}");
-                                    Console.WriteLine($"Type: {transfer.TypeSendId}");
-                                    Console.WriteLine($"Status: {transfer.StatusApprovedId}");
-                                    Console.WriteLine($"Amount: {transfer.TransferAmount}");
+                                    Console.WriteLine($"ID: {transferdetail.TransferId}");
+                                    Console.WriteLine($"From: {transferdetail.FromUsername}");
+                                    Console.WriteLine($"To: {transferdetail.ToUserName}");
+                                    Console.WriteLine($"Type: {transferdetail.Type}");
+                                    Console.WriteLine($"Status: {transferdetail.Status}");
+                                    Console.WriteLine($"Amount: {transferdetail.TransferAmount}");
                                 }
-                                else
-                                {
-                                    Console.WriteLine("Invalid transfer id.");
-                                }
-
                             }
-
 
                             break;
                         case 3: // View Pending Requests
@@ -201,6 +196,12 @@ namespace TenmoClient
                     UserService.SetLogin(user);
                 }
             }
+        }
+
+        private void ViewBalance()
+        {
+            decimal balance = accountService.GetBalance(UserService.UserId, UserService.Token);
+            Console.WriteLine($"Your current account balance is: {balance.ToString("C")}");
         }
     }
 }

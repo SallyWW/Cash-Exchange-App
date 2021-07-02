@@ -184,17 +184,18 @@ namespace TenmoServer.DAO
                 conn.Open();
 
                 SqlCommand cmd = new SqlCommand("SELECT t.transfer_id AS id, t.amount AS amount, usTo.user_id AS ToUserId, usTo.username AS ToUsername, " +
-                    "usFrom.user_id AS FromUserId, usFrom.username AS FromUsername " +
+                    "usFrom.user_id AS FromUserId, usFrom.username AS FromUsername, ts.transfer_status_desc, tt.transfer_type_desc " +
                     "FROM transfers t " +
                     "INNER JOIN accounts acTo ON t.account_to = acTo.account_id " +
                     "INNER JOIN users usTo ON acTo.user_id = UsTo.user_id " +
                     "INNER JOIN accounts acFrom ON t.account_from = acFrom.account_id " +
                     "INNER JOIN users usFrom ON acFrom.user_id = UsFrom.user_id " +
+                    "INNER JOIN transfer_statuses ts ON t.transfer_status_id = ts.transfer_status_id " +
+                    "INNER JOIN transfer_types tt ON t.transfer_type_id = tt.transfer_type_id " +
                     "WHERE usTo.user_id = @userid " +
                     "OR usFrom.user_id = @userid", conn);
 
                 cmd.Parameters.AddWithValue("@userid", userId);
-                //cmd.ExecuteNonQuery();
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -209,6 +210,8 @@ namespace TenmoServer.DAO
                         viewTransfer.FromUsername = Convert.ToString(reader["FromUsername"]);
                         viewTransfer.ToUserId = Convert.ToInt32(reader["ToUserId"]);
                         viewTransfer.ToUserName = Convert.ToString(reader["ToUsername"]);
+                        viewTransfer.Type = Convert.ToString(reader["transfer_type_desc"]);
+                        viewTransfer.Status = Convert.ToString(reader["transfer_status_desc"]);
 
                         transfers.Add(viewTransfer);
                     }
