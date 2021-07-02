@@ -24,9 +24,8 @@ namespace TenmoServer.Controllers
         public ActionResult<UserBalance> ViewBalance()
         {
             UserBalance balance = new UserBalance();
-            int userId = int.Parse(this.User.FindFirst("sub").Value);
-
-            balance.Balance = userDAO.GetBalance(userId);
+            
+            balance.Balance = userDAO.GetBalance(LoggedInUserId());
 
             return Ok(balance);
         }
@@ -64,6 +63,19 @@ namespace TenmoServer.Controllers
             userDAO.UpdateBalance(transfer.SendId, (transfer.Amount * -1));
 
             return Ok();
+        }
+
+        [HttpGet("transfer")]
+        public ActionResult<List<TransferDetails>> ViewTransfers()
+        {
+            List<TransferDetails> transferList = userDAO.ViewTransfers(LoggedInUserId());
+
+            return Ok(transferList);
+        }
+
+        private int LoggedInUserId()
+        {
+           return int.Parse(this.User.FindFirst("sub").Value);
         }
     }
 }

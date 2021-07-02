@@ -174,5 +174,48 @@ namespace TenmoServer.DAO
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public List<TransferDetails> ViewTransfers(int userId)
+        {
+            List<TransferDetails> transfers = new List<TransferDetails>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT t.transfer_id AS id, t.amount AS amount, usTo.user_id AS ToUserId, usTo.username AS ToUsername, " +
+                    "usFrom.user_id AS FromUserId, usFrom.username AS FromUsername " +
+                    "FROM transfers t " +
+                    "INNER JOIN accounts acTo ON t.account_to = acTo.account_id " +
+                    "INNER JOIN users usTo ON acTo.user_id = UsTo.user_id " +
+                    "INNER JOIN accounts acFrom ON t.account_from = acFrom.account_id " +
+                    "INNER JOIN users usFrom ON acFrom.user_id = UsFrom.user_id " +
+                    "WHERE usTo.user_id = @userid " +
+                    "OR usFrom.user_id = @userid", conn);
+
+                cmd.Parameters.AddWithValue("@userid", userId);
+                //cmd.ExecuteNonQuery();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        TransferDetails viewTransfer = new TransferDetails();
+                        viewTransfer.TransferId = Convert.ToInt32(reader["id"]);
+                        viewTransfer.FromUserId = Convert.ToInt32(reader["FromUserId"]);
+                        viewTransfer.TransferAmount = Convert.ToDecimal(reader["amount"]);
+                        viewTransfer.FromUsername = Convert.ToString(reader["FromUsername"]);
+                        viewTransfer.ToUserId = Convert.ToInt32(reader["ToUserId"]);
+                        viewTransfer.ToUserName = Convert.ToString(reader["ToUsername"]);
+
+                        transfers.Add(viewTransfer);
+                    }
+
+                }
+            }
+            return transfers;
+        }
     }
 }

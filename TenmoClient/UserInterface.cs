@@ -82,8 +82,51 @@ namespace TenmoClient
                             Console.WriteLine($"Your current account balance is: {balance.ToString("C")}");
                             break;
                         case 2: // View Past Transfers
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
-                            break;
+                            List<API_TransferDetails> transfers = accountService.GetTransfers(UserService.Token);
+
+                            Console.WriteLine("-------------------------------------------");
+                            Console.WriteLine("Transfers");
+                            Console.WriteLine("ID          From/To                 Amount");
+                            Console.WriteLine("-------------------------------------------");
+
+                            foreach (API_TransferDetails transfer in transfers)
+                            {
+                                string columnOne = transfer.TransferId.ToString().PadRight(12);
+                                string columnTwo;
+
+                                if (UserService.UserId == transfer.ToUserId)
+                                {
+                                    columnTwo = $"From: {transfer.FromUsername}".PadRight(23);
+                                }
+                                else
+                                {
+                                    columnTwo = $"To: {transfer.ToUserName}".PadRight(23);
+                                }
+
+                                string columnThree = transfer.TransferAmount.ToString("C").PadLeft(7);
+                                Console.WriteLine(columnOne + columnTwo + columnThree);
+                                Console.WriteLine("---------");
+                                Console.WriteLine("Please enter transfer ID to view details(0 to cancel): ");
+                                int transferDetailsId = Convert.ToInt32(Console.ReadLine());
+                                //--------------------------------------------
+                                //Transfer Details
+                                //--------------------------------------------
+                                // Id: 23
+                                // From: Bernice
+                                // To: Me Myselfandi
+                                // Type: Send
+                                // Status: Approved
+                                // Amount: $903.14
+
+                                Console.WriteLine("--------------------------------------------");
+                                Console.WriteLine("Transfer Details");
+                                Console.WriteLine("--------------------------------------------");
+
+
+                            }
+
+
+                            break;                    
                         case 3: // View Pending Requests
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
                             break;
@@ -107,7 +150,7 @@ namespace TenmoClient
                             Console.WriteLine("Enter amount: ");
                             decimal amountToTransfer = Convert.ToDecimal(Console.ReadLine());
 
-                            bool success = accountService.SendTransfer(UserService.Token, UserService.UserId,  transferToUserId, amountToTransfer);
+                            bool success = accountService.SendTransfer(UserService.Token, UserService.UserId, transferToUserId, amountToTransfer);
 
                             break;
                         case 5: // Request TE Bucks
