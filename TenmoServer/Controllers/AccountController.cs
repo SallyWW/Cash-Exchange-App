@@ -50,6 +50,8 @@ namespace TenmoServer.Controllers
             int typeSendId = 1001;
             int statusApprovedId = 2001;
 
+            if (LoggedInUserId() == transfer.SendId)
+            {
             decimal usersBalance = userDAO.GetBalance(transfer.SendId);
             if (transfer.Amount > usersBalance)
             {
@@ -62,6 +64,7 @@ namespace TenmoServer.Controllers
 
             userDAO.UpdateBalance(transfer.SendId, (transfer.Amount * -1));
 
+            }
             return Ok();
         }
 
