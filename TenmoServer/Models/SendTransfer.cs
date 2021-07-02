@@ -7,7 +7,7 @@ namespace TenmoServer.Models
 {
     public class SendTransfer
     {
-        public int RecieveId { get; set; }
+        public int ReceiveId { get; set; }
         public int SendId { get; set; }
         public decimal Amount { get; set; }
     }

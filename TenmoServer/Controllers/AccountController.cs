@@ -52,10 +52,14 @@ namespace TenmoServer.Controllers
             int statusApprovedId = 2001;
 
             decimal usersBalance = userDAO.GetBalance(transfer.SendId);
+            if (transfer.Amount > usersBalance)
+            {
+                return BadRequest("cannot transfer more than available balance");
+            }
 
-            userDAO.CreateTransfer(typeSendId, statusApprovedId, transfer.SendId, transfer.RecieveId, transfer.Amount);
+            userDAO.CreateTransfer(typeSendId, statusApprovedId, transfer.SendId, transfer.ReceiveId, transfer.Amount);
 
-            userDAO.UpdateBalance(transfer.RecieveId, transfer.Amount);
+            userDAO.UpdateBalance(transfer.ReceiveId, transfer.Amount);
 
             userDAO.UpdateBalance(transfer.SendId, (transfer.Amount * -1));
 
